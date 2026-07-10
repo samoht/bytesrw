@@ -2,6 +2,12 @@ true : bin_annot, safe_string
 <_b0> : -traverse
 <src> : include
 
+# Give each C stub function and datum its own section, and drop the DWARF
+# unwind tables the stubs never use, so a program that links this codec but
+# never calls it (its OCaml module dead-code-eliminated) drops the stub object
+# and the wrapped C library under the linker's --gc-sections.
+<src/**/*.c> : ccopt(-ffunction-sections), ccopt(-fdata-sections), ccopt(-fno-asynchronous-unwind-tables), ccopt(-fno-unwind-tables)
+
 <src/unix> : include
 <src/**> : package(unix)
 
