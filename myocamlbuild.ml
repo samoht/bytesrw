@@ -66,8 +66,9 @@ let lib_with_clib
     List.concat mklib, clib
   in
   let clib_cflags = ccopts @@ (A has_lib) :: pkg_config "cflags" clib in
-  let clib_cclibs = cclibs @@ static_stub_l :: (clib_l @ clib_frameworks) in
-  let clib_ccopts = ccopts @@ clib_L in
+  let clib_cclibs =
+    cclibs @@ (clib_L @ (static_stub_l :: (clib_l @ clib_frameworks)))
+  in
   begin
     dep [record_stub_lib] [stub_ar];
 
@@ -76,15 +77,15 @@ let lib_with_clib
     flag ["c"; "ocamlmklib"; use_clib] (S (clib_L @ clib_l @ mklib_frameworks));
 
     flag ["link"; "ocaml"; "library"; "byte"; record_stub_lib]
-      (S (dllibs [dynamic_stub_l] @ clib_ccopts @ clib_cclibs));
+      (S (dllibs [dynamic_stub_l] @ clib_cclibs));
 
     flag ["link"; "ocaml"; "library"; "native"; record_stub_lib]
-      (S (clib_ccopts @ clib_cclibs));
+      (S clib_cclibs);
 
     flag_and_dep ["link"; "ocaml"; link_stub_archive] (P stub_ar);
 
     flag ["link"; "ocaml"; "library"; "shared"; link_stub_archive]
-      (S (clib_ccopts @ clib_cclibs));
+      (S clib_cclibs);
 
     ocaml_lib ~tag_name:use_lib ~dir:src_dir (strf "%s/%s" src_dir lib)
   end
