@@ -3,6 +3,12 @@
    SPDX-License-Identifier: ISC
   ---------------------------------------------------------------------------*/
 
+/* musl exposes getentropy(3) from unistd.h only with a feature-test macro. */
+
+#if defined(__linux__) && !defined(_GNU_SOURCE)
+  #define _GNU_SOURCE
+#endif
+
 /* Detect platform */
 
 #if defined(__APPLE__) && defined(__MACH__)

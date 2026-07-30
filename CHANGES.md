@@ -12,6 +12,7 @@ v0.4.0 2026-08-22 Zagreb
 - Fix `Bytes.Slice.compare`. The last byte of equal length slices was
   not compared (#14). Thanks to Anil Madhavapeddy for the report.
 
+- Fix `Bytesrw_sysrandom` with strict C modes on musl libc.
 - Fix `Bytes.Reader.of_slice` when the given slice does not start at 0.
   Thanks to Thomas Gazagnaire for report (#13).
 
